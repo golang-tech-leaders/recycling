@@ -27,6 +27,7 @@ func (s *Server) setupRouter() {
 	s.r.HandleFunc("/hello", s.hello).Methods("GET", "POST")
 	s.r.HandleFunc("/get_class/{waste_name:[A-Za-z]+}", s.getWasteClass).Methods("GET")
 	s.r.HandleFunc("/add", s.newWaste).Methods("POST")
+	s.r.HandleFunc("/show_all", s.showAll).Methods("GET")
 }
 
 func (s *Server) Run() error {
