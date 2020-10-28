@@ -7,34 +7,45 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Server provides the server functionality
 type Server struct {
 	addr string
 	r    *mux.Router
 	db   database.WasteStorage
+	srv  *http.Server
 }
 
+// NewServer creates a server and prepares a router
 func NewServer(address string, storage database.WasteStorage) *Server {
 	s := Server{
 		addr: address,
 		r:    mux.NewRouter(),
 		db:   storage,
 	}
+
 	s.setupRouter()
+
+	s.srv = &http.Server{
+		Handler: s.r,
+		Addr:    s.addr,
+	}
+
 	return &s
 }
 
 func (s *Server) setupRouter() {
 	s.r.HandleFunc("/hello", s.hello).Methods("GET", "POST")
-	s.r.HandleFunc("/get_class/{waste_name:[A-Za-z]+}", s.getWasteClass).Methods("GET")
-	s.r.HandleFunc("/add", s.newWaste).Methods("POST")
-	s.r.HandleFunc("/show_all", s.showAll).Methods("GET")
+	s.r.HandleFunc("/api/waste/type/list", s.getWasteTypes).Methods("GET")
+	s.r.HandleFunc("/api/waste/type/{name}", s.getTypeByWasteName).Methods("GET")
+	s.r.HandleFunc("/api/waste/type/{id}", s.getWasteByTypeID).Methods("GET")
 }
 
+// Run starts the server
 func (s *Server) Run() error {
-	srv := &http.Server{
-		Handler: s.r,
-		Addr:    s.addr,
-	}
+	return s.srv.ListenAndServe()
+}
 
-	return srv.ListenAndServe()
+// Shutdown closes server
+func (s *Server) Shutdown() error {
+	return s.srv.Close()
 }
