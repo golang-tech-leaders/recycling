@@ -6,5 +6,5 @@ import models "recycling/internal/model"
 type WasteStorage interface {
 	GetWasteTypes() ([]models.WasteType, error)
 	GetTypeByWaste(wasteName string) (models.WasteType, error)
-	GetWasteByType(wasteTypeID string) ([]models.Waste, error)
+	GetWasteTypeByType(wasteTypeID string) (models.WasteType, error)
 }

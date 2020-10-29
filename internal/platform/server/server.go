@@ -33,9 +33,9 @@ func NewServer(address string, storage database.WasteStorage) *Server {
 
 func (s *Server) setupRouter() {
 	s.r.HandleFunc("/hello", s.hello).Methods("GET", "POST")
-	s.r.HandleFunc("/api/waste/type/list", s.getWasteTypes).Methods("GET")
-	s.r.HandleFunc("/api/waste/type/{name}", s.getTypeByWasteName).Methods("GET")
-	s.r.HandleFunc("/api/waste/type/{id}", s.getWasteByTypeID).Methods("GET")
+	s.r.HandleFunc("/waste/type/list", s.getWasteTypes).Methods("GET")
+	s.r.HandleFunc("/waste/type/search/{text}", s.getTypeByWasteName).Methods("GET")
+	s.r.HandleFunc("/waste/type/{type_id}", s.getWasteTypeByTypeID).Methods("GET")
 }
 
 // Run starts the server
