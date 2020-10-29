@@ -9,25 +9,23 @@ import (
 
 // Server provides the server functionality
 type Server struct {
-	addr string
-	r    *mux.Router
-	db   database.WasteStorage
-	srv  *http.Server
+	r   *mux.Router
+	db  database.WasteStorage
+	srv *http.Server
 }
 
 // NewServer creates a server and prepares a router
 func NewServer(address string, storage database.WasteStorage) *Server {
 	s := Server{
-		addr: address,
-		r:    mux.NewRouter(),
-		db:   storage,
+		r:  mux.NewRouter(),
+		db: storage,
 	}
 
 	s.setupRouter()
 
 	s.srv = &http.Server{
 		Handler: s.r,
-		Addr:    s.addr,
+		Addr:    address,
 	}
 
 	return &s
