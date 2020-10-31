@@ -13,5 +13,3 @@ migrate: createdb
 
 stop:
 	docker-compose -f docker-compose.yaml down
-
-	
