@@ -23,10 +23,10 @@ func (s *Server) getWasteTypes(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%+v", wasteTypes)
 }
 
-func (s *Server) getTypeByWasteName(w http.ResponseWriter, r *http.Request) {
+func (s *Server) getWasteTypeByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	wasteName := vars["name"]
-	wasteType, err := s.db.GetTypeByWaste(wasteName)
+	wasteType, err := s.db.GetWasteTypeByName(wasteName)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			http.Error(w, "No waste type was found for waste: "+wasteName, http.StatusNotFound)
@@ -36,10 +36,10 @@ func (s *Server) getTypeByWasteName(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%+v", wasteType)
 }
 
-func (s *Server) getWasteByTypeID(w http.ResponseWriter, r *http.Request) {
+func (s *Server) getWasteTypeByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	wasteTypeID := vars["id"]
-	wasteList, err := s.db.GetWasteByType(wasteTypeID)
+	wasteList, err := s.db.GetWasteTypeByID(wasteTypeID)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			http.Error(w, "No waste found for type: "+wasteTypeID, http.StatusNotFound)
