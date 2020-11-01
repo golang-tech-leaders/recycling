@@ -1,8 +1,10 @@
 package models
 
+import "database/sql"
+
 // WasteType provides type of waste
 type WasteType struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID          sql.NullString `json:"id"`
+	Name        sql.NullString `json:"name"`
+	Description sql.NullString `json:"description"`
 }

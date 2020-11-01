@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	db := database.NewInmemoryDb()
+	db := database.NewPostgresWasteStorage("postgres://postgres:postgres@localhost:15432/wastedb?sslmode=disable")
+	db.PopulateWasteTypes()
 	srv := server.NewServer(":12345", db)
 	srv.Run()
 }
