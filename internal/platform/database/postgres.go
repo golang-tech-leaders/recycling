@@ -25,14 +25,14 @@ func NewPostgresWasteStorage(address string) *PostgresWasteStorage {
 	return &pgStorage
 }
 
-func (p *PostgresWasteStorage) GetWasteTypes() ([]models.WasteType, error) {
+func (p *PostgresWasteStorage) GetWasteTypes() (models.WasteTypeList, error) {
 	rows, err := p.db.Query("SELECT * FROM waste_type ORDER BY id")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	wasteTypes := make([]models.WasteType, 0)
+	wasteTypes := make(models.WasteTypeList, 0)
 	for rows.Next() {
 		var wt models.WasteType
 		if err := rows.Scan(&wt.ID, &wt.Name, &wt.Description); err != nil {

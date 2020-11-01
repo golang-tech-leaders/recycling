@@ -8,3 +8,6 @@ type WasteType struct {
 	Name        sql.NullString `json:"name"`
 	Description sql.NullString `json:"description"`
 }
+
+// WasteTypeList is a slice of WasteType structs
+type WasteTypeList []WasteType

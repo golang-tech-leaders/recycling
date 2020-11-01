@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	models "recycling/internal/model"
 	"recycling/internal/platform/database"
 
 	"github.com/gorilla/mux"
@@ -21,7 +20,7 @@ func (s *Server) getWasteTypes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to get list of waste types due to: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, "%s", models.WtsToString(wasteTypes))
+	fmt.Fprintf(w, "%s", wasteTypes.WtsToString())
 	//marshaledJSON, err := json.Marshal(wasteTypes)
 	//if err != nil {
 	//	http.Error(w, "Unable to marshal wasteTypes to Json due to "+err.Error(), http.StatusInternalServerError)

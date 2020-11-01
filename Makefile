@@ -3,7 +3,7 @@ db: migrate
 
 postgres:
 	docker-compose -f docker-compose.yaml up -d
-	sleep 2
+	sleep 5
 
 createdb: postgres
 	docker exec -it db createdb --username=postgres --owner=postgres wastedb
