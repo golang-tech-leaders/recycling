@@ -2,17 +2,21 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	models "recycling/internal/model"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // required for PostgreSQL connection
 )
 
+// PostgresWasteStorage incapsulates PostgreSQL storage
 type PostgresWasteStorage struct {
 	db *sql.DB
 }
 
-func NewPostgresWasteStorage(address string) *PostgresWasteStorage {
+// NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
+func NewPostgresWasteStorage(config *models.Config) *PostgresWasteStorage {
+	address := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
 	db, err := sql.Open("postgres", address)
 	if err != nil {
 		log.Fatal(err)
@@ -25,6 +29,7 @@ func NewPostgresWasteStorage(address string) *PostgresWasteStorage {
 	return &pgStorage
 }
 
+// GetWasteTypes returns a list of all available waste types
 func (p *PostgresWasteStorage) GetWasteTypes() (models.WasteTypeList, error) {
 	rows, err := p.db.Query("SELECT * FROM waste_type ORDER BY id")
 	if err != nil {
@@ -48,22 +53,30 @@ func (p *PostgresWasteStorage) GetWasteTypes() (models.WasteTypeList, error) {
 	return wasteTypes, nil
 }
 
+// GetWasteTypeByName returns WasteType by it's name
 func (p *PostgresWasteStorage) GetWasteTypeByName(wasteName string) (models.WasteType, error) {
-	return models.WasteType{}, nil
+	var wt models.WasteType
+	err := p.db.QueryRow(`SELECT id, name, description FROM waste_type WHERE name like $1;`, "%"+wasteName+"%").Scan(&wt.ID, &wt.Name, &wt.Description)
+	switch err {
+	case sql.ErrNoRows:
+		return models.WasteType{}, ErrNotFound
+	case nil:
+		return wt, nil
+	default:
+		return models.WasteType{}, err
+	}
 }
 
+// GetWasteTypeByID returns WasteType by ID
 func (p *PostgresWasteStorage) GetWasteTypeByID(wasteTypeID string) (models.WasteType, error) {
-	return models.WasteType{}, nil
-}
-
-func (p *PostgresWasteStorage) PopulateWasteTypes() {
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type1', 'waste type 1')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type2', 'waste type 2')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type3', 'waste type 3')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type4', 'waste type 4')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type5', 'waste type 5')")
-	p.db.Exec("INSERT INTO waste_type(id, name, description) VALUES ('type6', 'waste type 6', 'description 6')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type7', 'waste type 7')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type8', 'waste type 8')")
-	p.db.Exec("INSERT INTO waste_type(id, name) VALUES ('type9', 'waste type 9')")
+	var wt models.WasteType
+	err := p.db.QueryRow(`SELECT id, name, description FROM waste_type WHERE id = $1;`, wasteTypeID).Scan(&wt.ID, &wt.Name, &wt.Description)
+	switch err {
+	case sql.ErrNoRows:
+		return models.WasteType{}, ErrNotFound
+	case nil:
+		return wt, nil
+	default:
+		return models.WasteType{}, err
+	}
 }
