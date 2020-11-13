@@ -1,0 +1,6 @@
+"db_port": 15432
+"db_host": "localhost"
+"db_name": "wastedb"
+"db_user": "postgres"
+"db_password": "postgres"
+"app_port": "8080"

@@ -1,8 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
-	"recycling/internal/platform/database"
+	models "recycling/internal/model"
 
 	"github.com/gorilla/mux"
 )
@@ -10,12 +11,12 @@ import (
 // Server provides the server functionality
 type Server struct {
 	r   *mux.Router
-	db  database.WasteStorage
+	db  WasteStorageRepository
 	srv *http.Server
 }
 
 // NewServer creates a server and prepares a router
-func NewServer(address string, storage database.WasteStorage) *Server {
+func NewServer(cfg *models.Config, storage WasteStorageRepository) *Server {
 	s := Server{
 		r:  mux.NewRouter(),
 		db: storage,
@@ -23,6 +24,7 @@ func NewServer(address string, storage database.WasteStorage) *Server {
 
 	s.setupRouter()
 
+	address := fmt.Sprintf(":%s", cfg.AppPort)
 	s.srv = &http.Server{
 		Handler: s.r,
 		Addr:    address,
@@ -34,8 +36,9 @@ func NewServer(address string, storage database.WasteStorage) *Server {
 func (s *Server) setupRouter() {
 	s.r.HandleFunc("/hello", s.hello).Methods("GET", "POST")
 	s.r.HandleFunc("/waste/type/list", s.getWasteTypes).Methods("GET")
-	s.r.HandleFunc("/waste/type/{type_id}", s.getWasteTypeByID).Methods("GET")
 	s.r.HandleFunc("/waste/type/search/{text}", s.getWasteTypeByName).Methods("GET")
+	s.r.HandleFunc("/waste/type/{type_id}", s.getWasteTypeByID).Methods("GET")
+
 }
 
 // Run starts the server

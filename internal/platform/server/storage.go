@@ -1,10 +1,10 @@
-package database
+package server
 
 import models "recycling/internal/model"
 
-// WasteStorage interface describes storage contract
-type WasteStorage interface {
-	GetWasteTypes() ([]models.WasteType, error)
+// WasteStorageRepository interface describes storage contract
+type WasteStorageRepository interface {
+	GetWasteTypes() (models.WasteTypeList, error)
 	GetWasteTypeByName(wasteName string) (models.WasteType, error)
 	GetWasteTypeByID(wasteTypeID string) (models.WasteType, error)
 }

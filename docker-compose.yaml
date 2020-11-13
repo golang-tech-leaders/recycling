@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:12  
+    container_name: db  
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - ./temp:/var/lib/postgres
+    restart: always
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      PORT: 8080
+      DBPORT: 5432
+      DBHOST: db
+      DBNAME: wastedb
+      DBUSER: postgres
+      DBPASSWORD: postgres
+    depends_on:
+      - db
