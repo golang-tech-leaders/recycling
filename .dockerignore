@@ -1,6 +1,5 @@
 .git
 .cache
-migrations/
 temp/
 docker-compose.yaml
 LICENSE
