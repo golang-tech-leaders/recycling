@@ -18,6 +18,7 @@ RUN set -x && apt-get update && \
 WORKDIR /app
 COPY config.yml ./
 COPY --from=builder /bin/server ./
+COPY migrations .
 
 ENV PORT=8080
 ENV DBPORT=15432
