@@ -21,6 +21,7 @@ COPY --from=builder /bin/server ./
 
 ENV PORT=8080
 ENV DBPORT=15432
+ENV DATABASE=""
 
 EXPOSE $PORT
 
