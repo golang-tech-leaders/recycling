@@ -10,16 +10,18 @@ import (
 
 // Server provides the server functionality
 type Server struct {
-	r   *mux.Router
-	db  WasteStorageRepository
-	srv *http.Server
+	r       *mux.Router
+	db      WasteStorageRepository
+	srv     *http.Server
+	timeout int
 }
 
 // NewServer creates a server and prepares a router
 func NewServer(cfg *config.Config, storage WasteStorageRepository) *Server {
 	s := Server{
-		r:  mux.NewRouter(),
-		db: storage,
+		r:       mux.NewRouter(),
+		db:      storage,
+		timeout: cfg.ReqTimeoutSec,
 	}
 
 	s.setupRouter()

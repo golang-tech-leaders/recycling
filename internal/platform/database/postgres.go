@@ -38,11 +38,11 @@ func (p *PostgresWasteStorage) Migrate() {
 
 // NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
 func NewPostgresWasteStorage(config *config.Config) *PostgresWasteStorage {
-	address := config.DbAddress
-	if address == "" {
-		address = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
+	dbURL := config.DbURL
+	if dbURL == "" {
+		dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbName)
 	}
-	db, err := sql.Open("postgres", address)
+	db, err := sql.Open("postgres", dbURL)
 
 	if err != nil {
 		log.Fatal(err)

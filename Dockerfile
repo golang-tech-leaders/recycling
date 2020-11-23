@@ -21,8 +21,7 @@ COPY --from=builder /bin/server ./
 COPY migrations /app/migrations
 
 ENV PORT=8080
-ENV DBPORT=15432
-ENV DATABASE=""
+ENV DATABASE_URL=""
 
 EXPOSE $PORT
 

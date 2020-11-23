@@ -19,7 +19,7 @@ func (s *Server) hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getWasteTypes(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), time.Duration(s.timeout)*time.Second)
 	defer func() {
 		log.Println("GetWasteTypes: canceling context")
 		cancel()
@@ -37,7 +37,7 @@ func (s *Server) getWasteTypes(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getWasteTypeByName(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), time.Duration(s.timeout)*time.Second)
 	defer func() {
 		log.Println("GetWasteTypeByName: canceling context")
 		cancel()
@@ -59,7 +59,7 @@ func (s *Server) getWasteTypeByName(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getWasteTypeByID(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), time.Duration(s.timeout)*time.Second)
 	defer func() {
 		log.Println("GetWasteTypeByID: canceling context")
 		cancel()
