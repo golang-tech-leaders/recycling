@@ -6,4 +6,4 @@ docker-compose.yaml
 LICENSE
 Makefile
 *.md
-!.github
+!.github/

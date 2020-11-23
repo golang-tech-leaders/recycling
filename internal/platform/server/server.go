@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
-	models "recycling/internal/model"
+	"recycling/internal/config"
 
 	"github.com/gorilla/mux"
 )
@@ -16,7 +16,7 @@ type Server struct {
 }
 
 // NewServer creates a server and prepares a router
-func NewServer(cfg *models.Config, storage WasteStorageRepository) *Server {
+func NewServer(cfg *config.Config, storage WasteStorageRepository) *Server {
 	s := Server{
 		r:  mux.NewRouter(),
 		db: storage,

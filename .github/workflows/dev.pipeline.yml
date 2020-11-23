@@ -1,10 +1,8 @@
-name: CI/CD
-
+name: CI/CD DEV
 on:
   push:
     branches:
-      - master
-
+      - dev
 jobs:
   deploy:
     name: Deploy on Heroku
@@ -18,8 +16,8 @@ jobs:
       - name: Build and push
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME_DEV }} web
       - name: release
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web      
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME_DEV }} web              
