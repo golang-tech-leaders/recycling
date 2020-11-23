@@ -25,7 +25,7 @@ func (p *PostgresWasteStorage) Migrate() {
 		log.Fatal("[MIGRATE] Unable to get driver due to: " + err.Error())
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://./migrations",
+		"file:///app/migrations",
 		"postgres", driver)
 	if err != nil {
 		log.Fatal("[MIGRATE] Unable to get migrate instance due to: " + err.Error())
