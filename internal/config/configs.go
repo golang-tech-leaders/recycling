@@ -8,5 +8,5 @@ type Config struct {
 	DbName        string `yaml:"db_name" env:"DBNAME" env-default:"postgres"`
 	DbUser        string `yaml:"db_user" env:"DBUSER" env-default:"postgres"`
 	DbPassword    string `yaml:"db_password" env:"DBPASSWORD"`
-	ReqTimeoutSec int    `yaml:"req_timeout_sec" env:"REQTIMEOUTSEC"`
+	ReqTimeoutSec int    `yaml:"req_timeout_sec" env:"REQTIMEOUTSEC" env-default:"10"`
 }
