@@ -31,7 +31,10 @@ func (p *PostgresWasteStorage) Migrate() {
 		log.Fatal("[MIGRATE] Unable to get migrate instance due to: " + err.Error())
 	}
 	err = m.Up()
-	if err != nil {
+	switch err {
+	case migrate.ErrNoChange:
+		return
+	default:
 		log.Fatal("[MIGRATE] Unable to apply DB migrations due to: " + err.Error())
 	}
 }
