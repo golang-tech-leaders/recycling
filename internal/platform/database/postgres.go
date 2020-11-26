@@ -10,8 +10,8 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq" // required for PostgreSQL connection
+	_ "github.com/golang-migrate/migrate/v4/source/file" // required for go-migrate via files
+	_ "github.com/lib/pq"                                // required for PostgreSQL connection
 )
 
 // PostgresWasteStorage incapsulates PostgreSQL storage
@@ -19,6 +19,7 @@ type PostgresWasteStorage struct {
 	db *sql.DB
 }
 
+// Migrate ups version of DB model
 func (p *PostgresWasteStorage) Migrate() {
 	driver, err := postgres.WithInstance(p.db, &postgres.Config{})
 	if err != nil {
@@ -83,29 +84,29 @@ func (p *PostgresWasteStorage) GetWasteTypes(ctx context.Context) (models.WasteT
 }
 
 // GetWasteTypeByName returns WasteType by it's name
-func (p *PostgresWasteStorage) GetWasteTypeByName(ctx context.Context, wasteName string) (models.WasteType, error) {
+func (p *PostgresWasteStorage) GetWasteTypeByName(ctx context.Context, wasteName string) (*models.WasteType, error) {
 	var wt models.WasteType
 	err := p.db.QueryRowContext(ctx, `SELECT id, name, description FROM waste_type WHERE name like $1;`, "%"+wasteName+"%").Scan(&wt.ID, &wt.Name, &wt.Description)
 	switch err {
 	case sql.ErrNoRows:
-		return models.WasteType{}, ErrNotFound
+		return nil, ErrNotFound
 	case nil:
-		return wt, nil
+		return &wt, nil
 	default:
-		return models.WasteType{}, err
+		return nil, err
 	}
 }
 
 // GetWasteTypeByID returns WasteType by ID
-func (p *PostgresWasteStorage) GetWasteTypeByID(ctx context.Context, wasteTypeID string) (models.WasteType, error) {
+func (p *PostgresWasteStorage) GetWasteTypeByID(ctx context.Context, wasteTypeID string) (*models.WasteType, error) {
 	var wt models.WasteType
 	err := p.db.QueryRowContext(ctx, `SELECT id, name, description FROM waste_type WHERE id = $1;`, wasteTypeID).Scan(&wt.ID, &wt.Name, &wt.Description)
 	switch err {
 	case sql.ErrNoRows:
-		return models.WasteType{}, ErrNotFound
+		return nil, ErrNotFound
 	case nil:
-		return wt, nil
+		return &wt, nil
 	default:
-		return models.WasteType{}, err
+		return nil, err
 	}
 }
