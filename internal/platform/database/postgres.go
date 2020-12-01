@@ -1,12 +1,17 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
+	"recycling/internal/config"
 	models "recycling/internal/model"
 
-	_ "github.com/lib/pq" // required for PostgreSQL connection
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file" // required for go-migrate via files
+	_ "github.com/lib/pq"                                // required for PostgreSQL connection
 )
 
 // PostgresWasteStorage incapsulates PostgreSQL storage
@@ -14,10 +19,35 @@ type PostgresWasteStorage struct {
 	db *sql.DB
 }
 
+// Migrate ups version of DB model
+func (p *PostgresWasteStorage) Migrate() {
+	driver, err := postgres.WithInstance(p.db, &postgres.Config{})
+	if err != nil {
+		log.Fatal("[MIGRATE] Unable to get driver due to: " + err.Error())
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file:///app/migrations",
+		"postgres", driver)
+	if err != nil {
+		log.Fatal("[MIGRATE] Unable to get migrate instance due to: " + err.Error())
+	}
+	err = m.Up()
+	switch err {
+	case migrate.ErrNoChange:
+		return
+	default:
+		log.Fatal("[MIGRATE] Unable to apply DB migrations due to: " + err.Error())
+	}
+}
+
 // NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
-func NewPostgresWasteStorage(config *models.Config) *PostgresWasteStorage {
-	address := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
-	db, err := sql.Open("postgres", address)
+func NewPostgresWasteStorage(config *config.Config) *PostgresWasteStorage {
+	dbURL := config.DbURL
+	if dbURL == "" {
+		dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbName)
+	}
+	db, err := sql.Open("postgres", dbURL)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,8 +60,8 @@ func NewPostgresWasteStorage(config *models.Config) *PostgresWasteStorage {
 }
 
 // GetWasteTypes returns a list of all available waste types
-func (p *PostgresWasteStorage) GetWasteTypes() (models.WasteTypeList, error) {
-	rows, err := p.db.Query("SELECT * FROM waste_type ORDER BY id")
+func (p *PostgresWasteStorage) GetWasteTypes(ctx context.Context) (models.WasteTypeList, error) {
+	rows, err := p.db.QueryContext(ctx, "SELECT * FROM waste_type ORDER BY id")
 	if err != nil {
 		return nil, err
 	}
@@ -54,29 +84,29 @@ func (p *PostgresWasteStorage) GetWasteTypes() (models.WasteTypeList, error) {
 }
 
 // GetWasteTypeByName returns WasteType by it's name
-func (p *PostgresWasteStorage) GetWasteTypeByName(wasteName string) (models.WasteType, error) {
+func (p *PostgresWasteStorage) GetWasteTypeByName(ctx context.Context, wasteName string) (*models.WasteType, error) {
 	var wt models.WasteType
-	err := p.db.QueryRow(`SELECT id, name, description FROM waste_type WHERE name like $1;`, "%"+wasteName+"%").Scan(&wt.ID, &wt.Name, &wt.Description)
+	err := p.db.QueryRowContext(ctx, `SELECT id, name, description FROM waste_type WHERE name like $1;`, "%"+wasteName+"%").Scan(&wt.ID, &wt.Name, &wt.Description)
 	switch err {
 	case sql.ErrNoRows:
-		return models.WasteType{}, ErrNotFound
+		return nil, ErrNotFound
 	case nil:
-		return wt, nil
+		return &wt, nil
 	default:
-		return models.WasteType{}, err
+		return nil, err
 	}
 }
 
 // GetWasteTypeByID returns WasteType by ID
-func (p *PostgresWasteStorage) GetWasteTypeByID(wasteTypeID string) (models.WasteType, error) {
+func (p *PostgresWasteStorage) GetWasteTypeByID(ctx context.Context, wasteTypeID string) (*models.WasteType, error) {
 	var wt models.WasteType
-	err := p.db.QueryRow(`SELECT id, name, description FROM waste_type WHERE id = $1;`, wasteTypeID).Scan(&wt.ID, &wt.Name, &wt.Description)
+	err := p.db.QueryRowContext(ctx, `SELECT id, name, description FROM waste_type WHERE id = $1;`, wasteTypeID).Scan(&wt.ID, &wt.Name, &wt.Description)
 	switch err {
 	case sql.ErrNoRows:
-		return models.WasteType{}, ErrNotFound
+		return nil, ErrNotFound
 	case nil:
-		return wt, nil
+		return &wt, nil
 	default:
-		return models.WasteType{}, err
+		return nil, err
 	}
 }

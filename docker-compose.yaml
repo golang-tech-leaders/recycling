@@ -8,9 +8,7 @@ services:
       - 15432:5432
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-    volumes:
-      - ./temp:/var/lib/postgres
+      POSTGRES_USER: postgres    
     restart: always
   app:
     build:

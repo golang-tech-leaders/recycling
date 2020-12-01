@@ -4,3 +4,4 @@
 "db_user": "postgres"
 "db_password": "postgres"
 "app_port": "8080"
+"timeout": 10
