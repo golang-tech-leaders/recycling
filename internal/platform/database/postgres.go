@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
+
 	"recycling/internal/config"
+	"recycling/internal/logger"
 	models "recycling/internal/model"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -16,32 +17,12 @@ import (
 
 // PostgresWasteStorage incapsulates PostgreSQL storage
 type PostgresWasteStorage struct {
-	db *sql.DB
-}
-
-// Migrate ups version of DB model
-func (p *PostgresWasteStorage) Migrate() {
-	driver, err := postgres.WithInstance(p.db, &postgres.Config{})
-	if err != nil {
-		log.Fatal("[MIGRATE] Unable to get driver due to: " + err.Error())
-	}
-	m, err := migrate.NewWithDatabaseInstance(
-		"file:///app/migrations",
-		"postgres", driver)
-	if err != nil {
-		log.Fatal("[MIGRATE] Unable to get migrate instance due to: " + err.Error())
-	}
-	err = m.Up()
-	switch err {
-	case migrate.ErrNoChange:
-		return
-	default:
-		log.Fatal("[MIGRATE] Unable to apply DB migrations due to: " + err.Error())
-	}
+	db  *sql.DB
+	log *logger.Logger
 }
 
 // NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
-func NewPostgresWasteStorage(config *config.Config) *PostgresWasteStorage {
+func NewPostgresWasteStorage(config *config.DBConfig, logger *logger.Logger) *PostgresWasteStorage {
 	dbURL := config.DbURL
 	if dbURL == "" {
 		dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbName)
@@ -49,14 +30,38 @@ func NewPostgresWasteStorage(config *config.Config) *PostgresWasteStorage {
 	db, err := sql.Open("postgres", dbURL)
 
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	if err = db.Ping(); err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
-	pgStorage := PostgresWasteStorage{db: db}
+	pgStorage := PostgresWasteStorage{db: db, log: logger}
 	return &pgStorage
+}
+
+// Migrate ups version of DB model
+func (p *PostgresWasteStorage) Migrate() {
+	driver, err := postgres.WithInstance(p.db, &postgres.Config{})
+	if err != nil {
+		p.log.Fatal("[MIGRATE] Unable to get driver due to: " + err.Error())
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file:///app/migrations",
+		//"file:///Users/daniel.khasanov/techleaders/recycling/migrations",
+		"postgres", driver)
+	if err != nil {
+		p.log.Fatal("[MIGRATE] Unable to get migrate instance due to: " + err.Error())
+	}
+	err = m.Up()
+	switch err {
+	case migrate.ErrNoChange:
+		return
+	case nil:
+		return
+	default:
+		p.log.Fatal("[MIGRATE] Unable to apply DB migrations due to: " + err.Error())
+	}
 }
 
 // GetWasteTypes returns a list of all available waste types

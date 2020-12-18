@@ -24,6 +24,7 @@ func PrepareConfig() *Config {
 }
 
 func getConfigFile() string {
-	configFile := flag.String("config", "config.yml", "config file")
+	configFile := flag.String("config", "config.yaml", "config file")
+	flag.Parse()
 	return *configFile
 }
