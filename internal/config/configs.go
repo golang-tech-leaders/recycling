@@ -1,7 +1,7 @@
 package config
 
 type DBConfig struct {
-	DbURL      string `yaml:"address" env:"DATABASE_URL" env-default:""`
+	DbURL      string `yaml:"address" env:"DATABASE" env-default:""`
 	DbPort     string `yaml:"port" env:"DBPORT" env-default:"5432"`
 	DbHost     string `yaml:"host" env:"DBHOST" env-default:"localhost"`
 	DbName     string `yaml:"name" env:"DBNAME" env-default:"postgres"`
