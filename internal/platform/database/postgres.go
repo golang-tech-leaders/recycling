@@ -22,7 +22,7 @@ type PostgresWasteStorage struct {
 }
 
 // NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
-func NewPostgresWasteStorage(config *config.DBConfig, logger *logger.Logger) *PostgresWasteStorage {
+func NewPostgresWasteStorage(config config.DBConfig, logger *logger.Logger) *PostgresWasteStorage {
 	dbURL := config.DbURL
 	logger.Debug("DATABASE_URL: " + dbURL)
 	if dbURL == "" {

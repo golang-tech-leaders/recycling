@@ -19,7 +19,7 @@ type LogConfig struct {
 }
 
 type Config struct {
-	DbConf  *DBConfig  `yaml:"db"`
-	AppConf *AppConfig `yaml:"app"`
-	LogConf *LogConfig `yaml:"logging"`
+	DbConf  DBConfig  `yaml:"db"`
+	AppConf AppConfig `yaml:"app"`
+	LogConf LogConfig `yaml:"logging"`
 }

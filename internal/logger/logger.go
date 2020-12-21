@@ -12,7 +12,7 @@ type Logger struct {
 	logger zerolog.Logger
 }
 
-func New(conf *config.LogConfig) *Logger {
+func New(conf config.LogConfig) *Logger {
 	var level zerolog.Level
 	switch strings.ToLower(conf.LogLevel) {
 	case "debug":
