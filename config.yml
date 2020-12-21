@@ -1,4 +1,5 @@
 db:
+  database_url: ""
   port: 15432
   host: "localhost"
   name: "wastedb"
@@ -8,4 +9,4 @@ app:
   port: "8080"
   timeout: 10
 logging:
-  level: "debug"
+  log_level: "debug"

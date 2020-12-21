@@ -1,7 +1,7 @@
 package config
 
 type DBConfig struct {
-	DbURL      string `yaml:"address" env:"DATABASE" env-default:""`
+	DbURL      string `yaml:"database_url" env:"DATABASE_URL"`
 	DbPort     string `yaml:"port" env:"DBPORT" env-default:"5432"`
 	DbHost     string `yaml:"host" env:"DBHOST" env-default:"localhost"`
 	DbName     string `yaml:"name" env:"DBNAME" env-default:"postgres"`
@@ -15,7 +15,7 @@ type AppConfig struct {
 }
 
 type LogConfig struct {
-	LogLevel string `yaml:"level" env:"LOGLEVEL" env-default:"INFO"`
+	LogLevel string `yaml:"log_level" env:"LOG_LEVEL" env-default:"INFO"`
 }
 
 type Config struct {
