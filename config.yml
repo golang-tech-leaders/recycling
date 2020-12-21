@@ -1,7 +1,12 @@
-"db_port": 15432
-"db_host": "localhost"
-"db_name": "wastedb"
-"db_user": "postgres"
-"db_password": "postgres"
-"app_port": "8080"
-"timeout": 10
+db:
+  database_url: ""
+  port: 15432
+  host: "localhost"
+  name: "wastedb"
+  user: "postgres"
+  password: "postgres"
+app:
+  port: "8080"
+  timeout: 10
+logging:
+  log_level: "debug"

@@ -13,7 +13,7 @@ createdb: postgres
 #	migrate -database postgres://postgres:postgres@localhost:15432/wastedb?sslmode=disable -path migrations up
 
 app: db
-	docker-compose up -d app
+	docker-compose up --build --force-recreate --no-deps -d app 
 
 start: app
 

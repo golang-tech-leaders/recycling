@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"recycling/internal/config"
+	"recycling/internal/logger"
 
 	"github.com/gorilla/mux"
 )
@@ -14,14 +15,16 @@ type Server struct {
 	db      WasteStorageRepository
 	srv     *http.Server
 	timeout int
+	log     *logger.Logger
 }
 
 // NewServer creates a server and prepares a router
-func NewServer(cfg *config.Config, storage WasteStorageRepository) *Server {
+func NewServer(cfg *config.AppConfig, storage WasteStorageRepository, logger *logger.Logger) *Server {
 	s := Server{
 		r:       mux.NewRouter(),
 		db:      storage,
 		timeout: cfg.ReqTimeoutSec,
+		log:     logger,
 	}
 
 	s.setupRouter()
