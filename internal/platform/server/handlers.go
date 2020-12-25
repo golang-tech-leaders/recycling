@@ -21,7 +21,10 @@ func (s *Server) getWasteTypes(w http.ResponseWriter, r *http.Request) {
 
 	ctx, cancel := context.WithTimeout(r.Context(), time.Duration(s.timeout)*time.Second)
 	defer func() {
-		s.log.Debug("getWasteTypes: canceling context")
+		s.log.Debug().
+			Str("package", "server").
+			Str("func", "getWasteTypes").
+			Msg("canceling context")
 		cancel()
 	}()
 	wasteTypes, err := s.db.GetWasteTypes(ctx)
@@ -39,7 +42,10 @@ func (s *Server) getWasteTypes(w http.ResponseWriter, r *http.Request) {
 func (s *Server) getWasteTypeByName(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), time.Duration(s.timeout)*time.Second)
 	defer func() {
-		s.log.Debug("getWasteTypeByName: canceling context")
+		s.log.Debug().
+			Str("package", "server").
+			Str("func", "getWasteTypeByName").
+			Msg("canceling context")
 		cancel()
 	}()
 	vars := mux.Vars(r)
@@ -61,7 +67,10 @@ func (s *Server) getWasteTypeByName(w http.ResponseWriter, r *http.Request) {
 func (s *Server) getWasteTypeByID(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), time.Duration(s.timeout)*time.Second)
 	defer func() {
-		s.log.Debug("getWasteTypeByID: canceling context")
+		s.log.Debug().
+			Str("package", "server").
+			Str("func", "getWasteTypeByID").
+			Msg("canceling context")
 		cancel()
 	}()
 	vars := mux.Vars(r)
