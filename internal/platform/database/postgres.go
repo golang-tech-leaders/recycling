@@ -24,7 +24,10 @@ type PostgresWasteStorage struct {
 // NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
 func NewPostgresWasteStorage(config config.DBConfig, logger *logger.Logger) *PostgresWasteStorage {
 	dbURL := config.DbURL
-	logger.Debug().Msg("DATABASE_URL: " + dbURL)
+	logger.Debug().
+		Str("package", "database").
+		Str("func", "NewPostgresWasteStorage").
+		Msg("DATABASE_URL: " + dbURL)
 	if dbURL == "" {
 		dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbName)
 	}
