@@ -9,7 +9,7 @@ import (
 )
 
 type Logger struct {
-	logger zerolog.Logger
+	zerolog.Logger
 }
 
 func New(conf config.LogConfig) *Logger {
@@ -33,25 +33,5 @@ func New(conf config.LogConfig) *Logger {
 
 	zerolog.SetGlobalLevel(level)
 
-	customLogger := zerolog.New(os.Stdout).With().Timestamp().Logger()
-	return &Logger{logger: customLogger}
-}
-
-func (l *Logger) Info(message string) {
-	l.logger.Info().Msg(message)
-}
-
-func (l *Logger) Debug(message string) {
-	l.logger.Debug().Msg(message)
-}
-
-func (l *Logger) Fatal(message interface{}) {
-	switch message.(type) {
-	case nil:
-		l.logger.Fatal().Msg("")
-	case string:
-		l.logger.Fatal().Msg(message.(string))
-	case error:
-		l.logger.Fatal().Msg(message.(error).Error())
-	}
+	return &Logger{zerolog.New(os.Stdout).With().Timestamp().Logger()}
 }

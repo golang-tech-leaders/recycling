@@ -24,17 +24,20 @@ type PostgresWasteStorage struct {
 // NewPostgresWasteStorage creates and returns an instance of PostgresWasteStorage
 func NewPostgresWasteStorage(config config.DBConfig, logger *logger.Logger) *PostgresWasteStorage {
 	dbURL := config.DbURL
-	logger.Debug("DATABASE_URL: " + dbURL)
+	logger.Debug().Msg("DATABASE_URL: " + dbURL)
 	if dbURL == "" {
 		dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.DbUser, config.DbPassword, config.DbHost, config.DbPort, config.DbName)
 	}
 	db, err := sql.Open("postgres", dbURL)
 
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatal().
+			Str("package", "database").
+			Str("func", "NewPostgresWasteStorage").
+			Msg(err.Error())
 	}
 	if err = db.Ping(); err != nil {
-		logger.Fatal(err)
+		logger.Fatal().Str("package", "database").Str("func", "NewPostgresWasteStorage").Msg(err.Error())
 	}
 
 	pgStorage := PostgresWasteStorage{db: db, log: logger}
@@ -45,14 +48,20 @@ func NewPostgresWasteStorage(config config.DBConfig, logger *logger.Logger) *Pos
 func (p *PostgresWasteStorage) Migrate() {
 	driver, err := postgres.WithInstance(p.db, &postgres.Config{})
 	if err != nil {
-		p.log.Fatal("[MIGRATE] Unable to get driver due to: " + err.Error())
+		p.log.Fatal().
+			Str("package", "database").
+			Str("func", "Migrate").
+			Msg("Unable to get driver due to: " + err.Error())
 	}
 	m, err := migrate.NewWithDatabaseInstance(
 		"file:///app/migrations",
 		//"file:///Users/daniel.khasanov/techleaders/recycling/migrations",
 		"postgres", driver)
 	if err != nil {
-		p.log.Fatal("[MIGRATE] Unable to get migrate instance due to: " + err.Error())
+		p.log.Fatal().
+			Str("package", "database").
+			Str("func", "Migrate").
+			Msg("Unable to get migrate instance due to: " + err.Error())
 	}
 	err = m.Up()
 	switch err {
@@ -61,7 +70,10 @@ func (p *PostgresWasteStorage) Migrate() {
 	case nil:
 		return
 	default:
-		p.log.Fatal("[MIGRATE] Unable to apply DB migrations due to: " + err.Error())
+		p.log.Fatal().
+			Str("package", "database").
+			Str("func", "Migrate").
+			Msg("Unable to apply DB migrations due to: " + err.Error())
 	}
 }
 
