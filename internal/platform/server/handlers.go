@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"recycling/internal/platform/database"
@@ -49,7 +50,7 @@ func (s *Server) getWasteTypeByName(w http.ResponseWriter, r *http.Request) {
 		cancel()
 	}()
 	vars := mux.Vars(r)
-	wasteName := vars["text"]
+	wasteName := strings.ToLower(vars["text"])
 	wasteType, err := s.db.GetWasteTypeByName(ctx, wasteName)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
@@ -74,7 +75,7 @@ func (s *Server) getWasteTypeByID(w http.ResponseWriter, r *http.Request) {
 		cancel()
 	}()
 	vars := mux.Vars(r)
-	wasteTypeID := vars["type_id"]
+	wasteTypeID := strings.ToLower(vars["type_id"])
 	wasteType, err := s.db.GetWasteTypeByID(ctx, wasteTypeID)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {

@@ -5,16 +5,16 @@ CREATE TABLE waste_type(
     CONSTRAINT pk_waste_type PRIMARY KEY (id)
 );
 
-INSERT INTO waste_type(id, name) VALUES ('Стекло', 'Стекло');
-INSERT INTO waste_type(id, name) VALUES ('Пластик', 'Одноразовый пластик');
-INSERT INTO waste_type(id, name) VALUES ('Метал', 'Отходы из метала');
-INSERT INTO waste_type(id, name) VALUES ('Одежда', 'Одежда');
-INSERT INTO waste_type(id, name) VALUES ('Иное', 'Иное');
-INSERT INTO waste_type(id, name) VALUES ('Опасное', 'Опасные отходы');
-INSERT INTO waste_type(id, name) VALUES ('Батарейки', 'Батарейки, аккумуляторы, АКБ');
-INSERT INTO waste_type(id, name) VALUES ('Лампочки', 'Лампы, лампы дневного света');
-INSERT INTO waste_type(id, name) VALUES ('Техника', 'Бытовая техника');
-INSERT INTO waste_type(id, name) VALUES ('ТетраПак', 'Тара/упаковка Tetra Pack');
-INSERT INTO waste_type(id, name) VALUES ('Крышечки', 'Пластиковые крышечки');
-INSERT INTO waste_type(id, name) VALUES ('Шины', 'Шины резиновые');
-
+INSERT INTO waste_type(id, name) VALUES ('стекло', 'стекло');
+INSERT INTO waste_type(id, name) VALUES ('пластик', 'одноразовый пластик');
+INSERT INTO waste_type(id, name) VALUES ('одежда', 'одежда');
+INSERT INTO waste_type(id, name) VALUES ('иное', 'иное');
+INSERT INTO waste_type(id, name) VALUES ('опасныеотходы', 'опасные отходы');
+INSERT INTO waste_type(id, name) VALUES ('батарейки', 'батарейки, аккумуляторы, АКБ');
+INSERT INTO waste_type(id, name) VALUES ('лампочки', 'лампы, лампы дневного света');
+INSERT INTO waste_type(id, name) VALUES ('бытоваятехника', 'бытовая техника');
+INSERT INTO waste_type(id, name) VALUES ('тетрапак', 'тетра пак');
+INSERT INTO waste_type(id, name) VALUES ('крышечки', 'пластиковые крышечки');
+INSERT INTO waste_type(id, name) VALUES ('шины', 'шины резиновые');
+INSERT INTO waste_type(id, name) VALUES ('бумага', 'бумага');
+INSERT INTO waste_type(id, name) VALUES ('металл', 'металл');
